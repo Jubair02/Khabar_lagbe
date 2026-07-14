@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Khabar Lagbe | Fresh Food Delivery in Dhaka</title>
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Khabar Lagbe delivers fresh, hot, homemade-quality food to your doorstep in Dhaka. Order biryani, burgers, fried rice and more online."
+    />
+    <meta
+      name="keywords"
+      content="food delivery, Dhaka, Bashundhara, biryani, burger, khabar lagbe"
+    />
+    <meta name="author" content="Khabar Lagbe" />
+
+    <!-- Open Graph / Social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Khabar Lagbe | Fresh Food Delivery" />
+    <meta
+      property="og:description"
+      content="Get fresh & hot food delivered to your doorstep in minutes."
+    />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop"
+    />
+
+    <!-- Favicon (inline emoji) -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      <i class="fas fa-check-circle"></i>
+      <div>
+        <h4>Success!</h4>
+        <p id="toast-message">Action successful.</p>
+      </div>
+    </div>
+
+    <!-- Cart Overlay & Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <aside class="cart-sidebar" id="cart-sidebar" aria-label="Shopping cart">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button
+          class="close-cart"
+          onclick="toggleCart()"
+          aria-label="Close cart"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="cart-items" id="cart-items-container">
+        <p style="text-align: center; color: #999; margin-top: 20px">
+          Your cart is empty.
+        </p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cart-total-price">৳0</span>
+        </div>
+        <button
+          class="btn"
+          id="checkout-btn"
+          style="width: 100%"
+          onclick="goToCheckout()"
+          disabled
+        >
+          Proceed to Checkout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Navigation -->
+    <header id="header">
+      <div class="container">
+        <nav>
+          <a href="#home" class="logo">
+            <i class="fas fa-utensils"></i> Khabar Lagbe
+          </a>
+          <button class="menu-toggle" id="mobile-menu" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <ul class="nav-links">
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#menu" class="nav-link">Menu</a></li>
+            <li><a href="checkout.html" class="nav-link">Checkout</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li>
+              <button
+                class="cart-btn"
+                onclick="toggleCart()"
+                aria-label="Open cart"
+              >
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count">0</span>
+              </button>
+            </li>
+            <li>
+              <div class="account-area">
+                <button class="login-btn" id="login-btn">Login</button>
+                <button
+                  class="account-btn"
+                  id="account-btn"
+                  style="display: none"
+                >
+                  <span class="avatar" id="account-avatar">U</span>
+                  <span id="account-name">Account</span>
+                  <i class="fas fa-chevron-down" style="font-size: 0.7rem"></i>
+                </button>
+                <div class="account-menu" id="account-menu">
+                  <div class="menu-user">
+                    <strong id="menu-user-name"></strong>
+                    <small id="menu-user-email"></small>
+                  </div>
+                  <button id="my-orders-btn">
+                    <i class="fas fa-box"></i> My Orders
+                  </button>
+                  <button id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home">
+      <div class="container hero-content">
+        <h1>
+          Khabar Lagbe? <br />
+          We Deliver <span>Fresh &amp; Hot Food!</span>
+        </h1>
+        <p>
+          Craving something delicious? Get homemade quality food delivered
+          straight to your doorstep in minutes.
+        </p>
+        <a href="#menu" class="btn">View Menu</a>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+      <div class="container">
+        <h2 class="section-title">Our Menu</h2>
+        <p class="section-subtitle">Delicious Choices</p>
+
+        <div class="menu-search">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="menu-search-input"
+            placeholder="Search food..."
+            aria-label="Search menu"
+          />
+        </div>
+
+        <div class="menu-filters" id="menu-filters"></div>
+
+        <div class="menu-grid" id="menu-container"></div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title" style="color: white">Contact Us</h2>
+        <p class="section-subtitle">Get in Touch</p>
+
+        <div class="contact-content">
+          <div class="contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Call Us</h3>
+            <p><a href="tel:+8801754995743">+8801754995743</a></p>
+          </div>
+
+          <div class="contact-item">
+            <i class="fab fa-whatsapp"></i>
+            <h3>WhatsApp</h3>
+            <p>Message us for quick support</p>
+            <a
+              href="https://wa.me/8801754995743"
+              target="_blank"
+              rel="noopener"
+              class="whatsapp-btn"
+              ><i class="fab fa-whatsapp"></i> Chat Now</a
+            >
+          </div>
+
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Location</h3>
+            <p>Bashundhara R/A, Dhaka</p>
+            <p>Bangladesh</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="social-links">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Facebook"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Instagram"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Twitter"
+            ><i class="fab fa-twitter"></i
+          ></a>
+        </div>
+        <p>&copy; 2026 Khabar Lagbe. All Rights Reserved. &middot;</p>
+      </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="auth-modal">
+      <div class="modal-box">
+        <div class="modal-top">
+          <h3>Welcome</h3>
+          <button class="modal-x" id="auth-close">&times;</button>
+        </div>
+        <div class="modal-content">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Login</button>
+            <button class="auth-tab" data-tab="register">Register</button>
+          </div>
+
+          <div class="auth-error" id="auth-error"></div>
+
+          <!-- Login -->
+          <form class="auth-form active" id="login-form">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                class="form-control"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                class="form-control"
+                placeholder="Your password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn" style="width: 100%">Login</button>
+          </form>
+
+          <!-- Register -->
+          <form class="auth-form" id="register-form">
+            <div class="form-group">
+              <label for="reg-name">Full Name</label>
+              <input
+                type="text"
+                id="reg-name"
+                class="form-control"
+                placeholder="Your name"
+                maxlength="100"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="reg-email">Email</label>
+              <input
+                type="email"
+                id="reg-email"
+                class="form-control"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="reg-phone">Phone</label>
+              <input
+                type="tel"
+                id="reg-phone"
+                class="form-control"
+                placeholder="01XXXXXXXXX"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="reg-address"
+                >Default Address
+                <small style="color: #999">(optional)</small></label
+              >
+              <input
+                type="text"
+                id="reg-address"
+                class="form-control"
+                placeholder="House, Road, Area"
+                maxlength="300"
+              />
+            </div>
+            <div class="form-group">
+              <label for="reg-password">Password</label>
+              <input
+                type="password"
+                id="reg-password"
+                class="form-control"
+                placeholder="At least 6 characters"
+                required
+              />
+            </div>
+            <button type="submit" class="btn" style="width: 100%">
+              Create Account
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Orders Modal -->
+    <div class="modal-overlay" id="orders-modal">
+      <div class="modal-box wide">
+        <div class="modal-top">
+          <h3>
+            <i class="fas fa-box" style="color: var(--primary-color)"></i> My
+            Orders
+          </h3>
+          <button class="modal-x" id="orders-close">&times;</button>
+        </div>
+        <div class="modal-content" id="orders-list">
+          <div class="orders-empty">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/menu.js"></script>
+  </body>
+</html>

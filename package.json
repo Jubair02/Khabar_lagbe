@@ -1,0 +1,29 @@
+{
+  "name": "khabar-lagbe",
+  "version": "1.0.0",
+  "description": "Khabar Lagbe - Fresh Food Delivery with real-time admin dashboard",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "food",
+    "delivery",
+    "mongodb",
+    "express",
+    "socket.io"
+  ],
+  "author": "Jubair",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.5.1",
+    "socket.io": "^4.7.5"
+  }
+}

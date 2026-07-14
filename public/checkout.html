@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Khabar Lagbe</title>
+    <meta name="description" content="Securely complete your Khabar Lagbe order and track it in real time.">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <h4>Success!</h4>
+            <p id="toast-message">Action successful.</p>
+        </div>
+    </div>
+
+    <!-- Cart Overlay & Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <aside class="cart-sidebar" id="cart-sidebar" aria-label="Shopping cart">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" onclick="toggleCart()" aria-label="Close cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <p style="text-align:center; color:#999; margin-top:20px;">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">৳0</span>
+            </div>
+            <button class="btn" id="checkout-btn" style="width: 100%;" onclick="toggleCart()">Continue</button>
+        </div>
+    </aside>
+
+    <!-- Navigation -->
+    <header id="header" class="sticky">
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-utensils"></i> Khabar Lagbe
+                </a>
+                <button class="menu-toggle" id="mobile-menu" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#menu" class="nav-link">Menu</a></li>
+                    <li><a href="checkout.html" class="nav-link">Checkout</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li>
+                        <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </button>
+                    </li>
+                    <li>
+                        <div class="account-area">
+                            <button class="login-btn" id="login-btn">Login</button>
+                            <button class="account-btn" id="account-btn" style="display:none;">
+                                <span class="avatar" id="account-avatar">U</span>
+                                <span id="account-name">Account</span>
+                                <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+                            </button>
+                            <div class="account-menu" id="account-menu">
+                                <div class="menu-user">
+                                    <strong id="menu-user-name"></strong>
+                                    <small id="menu-user-email"></small>
+                                </div>
+                                <button id="my-orders-btn"><i class="fas fa-box"></i> My Orders</button>
+                                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Checkout -->
+    <section class="checkout-page">
+        <div class="container">
+            <h2 class="section-title">Checkout</h2>
+            <p class="section-subtitle">Complete Your Order</p>
+
+            <!-- Main checkout (hidden after success) -->
+            <div id="checkout-main">
+                <!-- Empty state -->
+                <div class="checkout-empty" id="checkout-empty" style="display:none;">
+                    <i class="fas fa-cart-shopping"></i>
+                    <p>Your cart is empty.</p>
+                    <a href="index.html#menu" class="btn">Browse Menu</a>
+                </div>
+
+                <div class="checkout-wrap">
+                    <!-- Left: cart review -->
+                    <div class="checkout-col">
+                        <h3><i class="fas fa-basket-shopping"></i> Your Items</h3>
+                        <div id="checkout-items"></div>
+                    </div>
+
+                    <!-- Right: summary + form -->
+                    <div class="checkout-col" id="checkout-summary">
+                        <h3><i class="fas fa-truck-fast"></i> Delivery Details</h3>
+
+                        <div class="summary-box">
+                            <h4>Order Summary</h4>
+                            <p id="order-summary-text">No items selected.</p>
+                            <div class="sum-total">Total: <span id="form-total">৳0</span></div>
+                        </div>
+
+                        <form id="order-form" novalidate>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" placeholder="01XXXXXXXXX" required>
+                                <span class="error-msg">Enter a valid BD phone number (11 digits)</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Delivery Address</label>
+                                <input type="text" id="address" class="form-control" placeholder="House, Road, Area" maxlength="300" required>
+                                <span class="error-msg">Address is required</span>
+                            </div>
+
+                            <p class="checkout-note">
+                                <i class="fas fa-lock"></i> Secure checkout — you'll be asked to log in if you haven't already. Track your order live under <strong>My Orders</strong>.
+                            </p>
+
+                            <button type="submit" class="btn" style="width: 100%;">Confirm Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success screen -->
+            <div class="checkout-done" id="checkout-done" style="display:none;">
+                <div class="check-circle"><i class="fas fa-check"></i></div>
+                <h2>Order Placed Successfully!</h2>
+                <p>Thank you for your order. We're preparing it now.</p>
+                <div class="done-meta">
+                    <div><span class="lbl">Order ID</span><span class="val" id="done-order-id">#—</span></div>
+                    <div><span class="lbl">Total</span><span class="val" id="done-total">৳0</span></div>
+                </div>
+                <div class="actions">
+                    <button class="btn" id="track-order-btn"><i class="fas fa-location-crosshairs"></i> Track My Order</button>
+                    <a href="index.html#menu" class="btn" style="background:var(--dark-color);">Order More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-box">
+            <div class="modal-top">
+                <h3>Welcome</h3>
+                <button class="modal-x" id="auth-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+                <div class="auth-error" id="auth-error"></div>
+
+                <form class="auth-form active" id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Your password" required>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;">Login</button>
+                </form>
+
+                <form class="auth-form" id="register-form">
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="Your name" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-phone">Phone</label>
+                        <input type="tel" id="reg-phone" class="form-control" placeholder="01XXXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-address">Default Address <small style="color:#999;">(optional)</small></label>
+                        <input type="text" id="reg-address" class="form-control" placeholder="House, Road, Area" maxlength="300">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" class="form-control" placeholder="At least 6 characters" required>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Orders Modal -->
+    <div class="modal-overlay" id="orders-modal">
+        <div class="modal-box wide">
+            <div class="modal-top">
+                <h3><i class="fas fa-box" style="color:var(--primary-color);"></i> My Orders</h3>
+                <button class="modal-x" id="orders-close">&times;</button>
+            </div>
+            <div class="modal-content" id="orders-list"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>

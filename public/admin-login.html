@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Khabar Lagbe</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1f242d, #2c3440);
+            padding: 20px;
+        }
+        .login-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 40px 34px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+        }
+        .brand {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f242d;
+            margin-bottom: 6px;
+        }
+        .brand i { color: #ff9f1c; }
+        .subtitle { text-align: center; color: #999; margin-bottom: 28px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #1f242d; font-size: 0.92rem; }
+        .input-wrap { position: relative; }
+        .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #bbb; }
+        input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        input:focus { outline: none; border-color: #ff9f1c; box-shadow: 0 0 0 3px rgba(255,159,28,0.15); }
+        .btn {
+            width: 100%;
+            padding: 13px;
+            background: #ff9f1c;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #e08e0b; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .error {
+            background: #fdeaea;
+            color: #e74c3c;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .error.active { display: block; }
+        .back { display: block; text-align: center; margin-top: 20px; color: #999; text-decoration: none; font-size: 0.85rem; }
+        .back:hover { color: #ff9f1c; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="brand"><i class="fas fa-utensils"></i> Khabar Lagbe</div>
+        <div class="subtitle">Admin Dashboard Login</div>
+
+        <div class="error" id="error"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="admin@example.com" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Your password" required>
+                </div>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Login</button>
+        </form>
+
+        <a href="index.html" class="back"><i class="fas fa-arrow-left"></i> Back to store</a>
+    </div>
+
+    <script>
+        const TOKEN_KEY = 'khabar_lagbe_admin_token';
+        // Already logged in? go straight to dashboard
+        if (localStorage.getItem(TOKEN_KEY)) location.replace('admin.html');
+
+        const form = document.getElementById('login-form');
+        const errorEl = document.getElementById('error');
+        const btn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.classList.remove('active');
+            btn.disabled = true; btn.textContent = 'Logging in...';
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value.trim(),
+                        password: document.getElementById('password').value,
+                    }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    errorEl.textContent = data.error || 'Login failed.';
+                    errorEl.classList.add('active');
+                } else {
+                    localStorage.setItem(TOKEN_KEY, data.token);
+                    location.replace('admin.html');
+                }
+            } catch {
+                errorEl.textContent = 'Server unreachable. Try again.';
+                errorEl.classList.add('active');
+            }
+            btn.disabled = false; btn.textContent = 'Login';
+        });
+    </script>
+</body>
+</html>
